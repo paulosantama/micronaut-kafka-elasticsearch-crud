@@ -1,0 +1,55 @@
+plugins {
+    id("groovy") 
+    id("com.github.johnrengelman.shadow") version "7.0.0"
+    id("io.micronaut.application") version "2.0.6"
+}
+
+version = "0.1"
+group = "com.example"
+
+repositories {
+    mavenCentral()
+    maven {
+        url "$artifactory_contextUrl/libs-release/"
+        allowInsecureProtocol true
+        credentials {
+            username = artifactory_user
+            password = artifactory_password
+        }
+    }
+}
+
+micronaut {
+    runtime("netty")
+    testRuntime("spock2")
+    processing {
+        incremental(true)
+        annotations("com.example.*")
+    }
+}
+
+dependencies {
+    implementation("io.micronaut:micronaut-http-client")
+    implementation("io.micronaut.elasticsearch:micronaut-elasticsearch")
+    implementation("io.micronaut.groovy:micronaut-runtime-groovy")
+    implementation("io.micronaut.kafka:micronaut-kafka")
+    implementation("javax.annotation:javax.annotation-api")
+    compileOnly("io.micronaut:micronaut-http-validation")
+    runtimeOnly("ch.qos.logback:logback-classic")
+    implementation("io.micronaut:micronaut-validation")
+
+    implementation 'br.com.zgsolucoes.clients:autorizacoes-kafka-client:3.14.0'
+
+}
+
+
+application {
+    mainClass.set("com.example.Application")
+}
+java {
+    sourceCompatibility = JavaVersion.toVersion("11")
+    targetCompatibility = JavaVersion.toVersion("11")
+}
+
+
+
